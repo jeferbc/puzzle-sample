@@ -1,3 +1,5 @@
+require 'io/console'
+
 #1) Generate the vector Game, puts the result
 def generate_puzzle
   array = [1,2,3,4,5,6,7,8," "].shuffle
@@ -18,6 +20,40 @@ def print_square(array)
   "
 end
 
-array = generate_puzzle
-puts array.inspect
-print_square(array)
+# Reads keypresses from the user including 2 and 3 escape character sequences.
+def read_char
+  STDIN.echo = false
+  STDIN.raw!
+
+  input = STDIN.getc.chr
+  if input == "\e" then
+    input << STDIN.read_nonblock(3) rescue nil
+    input << STDIN.read_nonblock(2) rescue nil
+  end
+ensure
+  STDIN.echo = true
+  STDIN.cooked!
+
+  return input
+end
+
+# oringal case statement from:
+# http://www.alecjacobson.com/weblog/?p=75
+def show_single_key
+  c = read_char
+
+  case c
+  when "\e[A"
+    puts "UP ARROW"
+  when "\e[B"
+    puts "DOWN ARROW"
+  when "\e[C"
+    puts "RIGHT ARROW"
+  when "\e[D"
+    puts "LEFT ARROW"
+  when "\u0003"
+    puts "CONTROL-C"
+    exit 0
+end
+
+show_single_key while(true)
