@@ -39,21 +39,51 @@ end
 
 # oringal case statement from:
 # http://www.alecjacobson.com/weblog/?p=75
-def show_single_key
-  c = read_char
 
+def manage_key(array)
+  c = read_char
   case c
   when "\e[A"
+    up(array)
     puts "UP ARROW"
   when "\e[B"
     puts "DOWN ARROW"
+    down(array)
   when "\e[C"
     puts "RIGHT ARROW"
+    right(array)
   when "\e[D"
     puts "LEFT ARROW"
+    left(array)
   when "\u0003"
     puts "CONTROL-C"
     exit 0
+  end
 end
 
-show_single_key while(true)
+#4) Movements
+def right(array)
+  index = array.index(" ")
+  array[index - 8], array[index] = array[index], array[index -8]
+  print_square(array)
+end
+
+def left(array)
+  index = array.index(" ")
+  array[index - 1], array[index] = array[index], array[index - 1]
+  print_square(array)
+end
+
+def up(array)
+  index = array.index(" ")
+  array[index - 3], array[index] = array[index], array[index - 3]
+  print_square(array)
+end
+
+def down(array)
+  index = array.index(" ")
+  array[index - 6], array[index] = array[index], array[index - 6]
+  print_square(array)
+end
+array = generate_puzzle
+manage_key(array) while(true)
